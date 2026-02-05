@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Mindful Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="theme-color" content="#6C5CE7">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="card login-card">
+            <header>
+                <h1>Daily Health Tracker</h1>
+                <p class="subtext">Enter your unique code to access your personal journal.</p>
+            </header>
+            <div class="input-group">
+                <input type="text" id="phoneInput" placeholder="Personal Code (e.g. MY-Code-123)" maxlength="20">
+            </div>
+            <button id="loginBtn" class="primary-btn">Login / Start</button>
+        </div>
+
+        <!-- Main App Content (Hidden Initially) -->
+        <div id="appContent" class="hidden dashboard-layout">
+
+            <!-- Left Sidebar -->
+            <aside class="sidebar">
+                <header class="sidebar-header">
+                    <h1>Daily Tracker</h1>
+                    <p class="subtext" id="userDisplay"></p>
+                    <p class="date-display" id="dateDisplay">Loading date...</p>
+                    <button id="logoutBtn" class="logout-link">Change User</button>
+                </header>
+
+                <!-- History Section (Moved to Sidebar) -->
+                <section class="card history-card">
+                    <h2>History</h2>
+                    <p class="subtext">Your past check-ins</p>
+                    <div id="historyList" class="history-list">
+                        <!-- History items will be injected here -->
+                        <p class="empty-history">No past records found.</p>
+                    </div>
+                </section>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+
+                <!-- 1. Productivity -->
+                <section class="card productivity-card">
+                    <h2>1. Productivity</h2>
+                    <p class="subtext">Were you productive today?</p>
+                    <div class="toggle-container">
+                        <input type="checkbox" id="productivityToggle" class="toggle-input">
+                        <label for="productivityToggle" class="toggle-label">
+                            <span class="toggle-text lazy">Relaxed</span>
+                            <span class="toggle-text productive">Focused</span>
+                            <span class="toggle-handle"></span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- 2. Mood -->
+                <section class="card mood-card">
+                    <h2>2. Mood</h2>
+                    <p class="subtext">How are you feeling?</p>
+                    <div class="mood-options">
+                        <button class="mood-btn" data-mood="angry" title="Angry/Frustrated">😠</button>
+                        <button class="mood-btn" data-mood="sad" title="Sad/Down">☹️</button>
+                        <button class="mood-btn" data-mood="neutral" title="Neutral">😐</button>
+                        <button class="mood-btn" data-mood="good" title="Good">🙂</button>
+                        <button class="mood-btn" data-mood="great" title="Great/Energetic">🤩</button>
+                    </div>
+                </section>
+
+                <!-- 3. Energy -->
+                <section class="card energy-card">
+                    <h2>3. Energy Level ⚡</h2>
+                    <p class="subtext">Rate your energy today (1-10)</p>
+                    <div class="slider-container">
+                        <input type="range" id="energyInput" min="1" max="10" value="5" class="slider">
+                        <div class="slider-labels">
+                            <span>Low</span>
+                            <span id="energyValue">5</span>
+                            <span>High</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. Movement & Mind (Exercise) -->
+                <section class="card exercise-card">
+                    <h2>4. Movement & Mind 🏃‍♂️</h2>
+                    <p class="subtext">Track your physical and mental fitness.</p>
+                    <div class="exercise-inputs">
+                        <div class="input-col">
+                            <label>Meditation</label>
+                            <div class="input-group small">
+                                <input type="number" id="meditationInput" min="0" placeholder="0">
+                                <span class="unit">min</span>
+                            </div>
+                        </div>
+                        <div class="input-col">
+                            <label>Movement</label>
+                            <div class="input-group small">
+                                <input type="number" id="movementInput" min="0" placeholder="0">
+                                <span class="unit">min</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Sleep -->
+                <section class="card sleep-card">
+                    <h2>5. Sleep Quality 🌙</h2>
+                    <p class="subtext">How many hours did you sleep?</p>
+                    <div class="input-group">
+                        <input type="number" id="sleepInput" min="0" max="24" step="0.5" placeholder="7.5">
+                        <span class="unit">hours</span>
+                    </div>
+                </section>
+
+                <!-- 6. Hydration (Water) -->
+                <section class="card water-card">
+                    <h2>6. Hydration</h2>
+                    <p class="subtext">Water consumed (Liters)</p>
+                    <div class="water-controls">
+                        <button id="decreaseWater" class="control-btn">-</button>
+                        <span id="waterCount" class="counter-display">0.0 L</span>
+                        <button id="increaseWater" class="control-btn">+</button>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="waterProgress" class="progress-bar-fill"></div>
+                    </div>
+                </section>
+
+                <!-- 7. Study Hours -->
+                <section class="card study-card">
+                    <h2>7. Study Hours 📚</h2>
+                    <p class="subtext">Focus time today?</p>
+                    <div class="input-group">
+                        <input type="number" id="studyInput" min="0" max="24" step="0.5" placeholder="0">
+                        <span class="unit">hours</span>
+                    </div>
+                </section>
+
+                <!-- 8. Digital Detox -->
+                <section class="card detox-card">
+                    <h2>8. Digital Detox 📱</h2>
+                    <p class="subtext">Total screen time today?</p>
+                    <div class="input-group">
+                        <input type="number" id="screenTimeInput" min="0" max="24" step="0.5" placeholder="0">
+                        <span class="unit">hours</span>
+                    </div>
+                </section>
+
+                <!-- 9. Gratitude Log -->
+                <section class="card gratitude-card">
+                    <h2>9. Gratitude Log 🙏</h2>
+                    <p class="subtext">One thing you are grateful for...</p>
+                    <textarea id="gratitudeInput" placeholder="I am grateful for..." rows="2"></textarea>
+                </section>
+
+                <!-- 10. Daily Highlight -->
+                <section class="card highlight-card">
+                    <h2>10. Daily Highlight</h2>
+                    <p class="subtext">What was the best part of your day?</p>
+                    <textarea id="highlightInput" placeholder="Today I..." rows="3" maxlength="150"></textarea>
+                    <div class="char-count"><span id="charCount">0</span>/150</div>
+                </section>
+
+                <!-- 11. Tomorrow's Targets -->
+                <section class="card goals-card">
+                    <h2>11. Tomorrow's Targets 🎯</h2>
+                    <p class="subtext">Set 3 intentions for tomorrow.</p>
+                    <div class="goals-container">
+                        <input type="text" id="goal1" placeholder="1. ..." class="goal-input">
+                        <input type="text" id="goal2" placeholder="2. ..." class="goal-input">
+                        <input type="text" id="goal3" placeholder="3. ..." class="goal-input">
+                    </div>
+                </section>
+
+                <button id="saveBtn" class="primary-btn">Save Entry</button>
+
+                <!-- 12. Weekly Insights (Analytics) -->
+                <section class="card analytics-card">
+                    <h2>12. Weekly Insights 📊</h2>
+                    <p class="subtext">Last 7 Days Average</p>
+                    <div class="analytics-grid">
+                        <div class="stat-box">
+                            <span class="stat-label">Sleep</span>
+                            <span id="avgSleep" class="stat-value">-</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Water</span>
+                            <span id="avgWater" class="stat-value">-</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Study</span>
+                            <span id="avgStudy" class="stat-value">-</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Productive</span>
+                            <span id="avgProductivity" class="stat-value">-%</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Energy</span>
+                            <span id="avgEnergy" class="stat-value">-</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Screen Time</span>
+                            <span id="avgScreen" class="stat-value">-</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Meditate</span>
+                            <span id="avgMeditate" class="stat-value">-</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Move</span>
+                            <span id="avgMove" class="stat-value">-</span>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+
+            <footer class="quote-container">
+                <p id="dailyQuote" class="daily-quote">Loading inspiration...</p>
+            </footer>
+        </div> <!-- End App Content -->
+
+        <div id="notification" class="notification hidden">Saved successfully!</div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
