@@ -125,11 +125,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Set Date Display
+        // Set Date Display (Indian Format)
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        dateDisplay.textContent = new Date().toLocaleDateString('en-US', options);
+        dateDisplay.textContent = new Date().toLocaleDateString('en-IN', options);
 
         // Check Access Window
+        updateQuotes(); // Always load quotes
+
         if (!isTimeOpen() && !DEBUG_MODE) {
             lockApp();
         } else {
@@ -138,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
             loadData();
             loadHistory(); // Load history on init
             calculateWeeklyStats(); // Update analytics
-            updateQuotes(); // Set daily quote
             updateUI();
         }
     }
@@ -409,7 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Extract date part: dailyTracker_USER_2023-10-27
                 const dateKey = key.split('_').pop(); // Get last part (DATE)
                 const dateObj = new Date(`${dateKey}T00:00:00`); // Fix timezone issue with simple date
-                const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const dateStr = dateObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
 
                 const moodEmoji = getMoodEmoji(entry.mood);
 
